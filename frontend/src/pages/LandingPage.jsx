@@ -16,8 +16,8 @@ const LandingPage = () => {
                 </div>
 
                 <h1 className="text-7xl md:text-8xl font-extrabold mb-8 tracking-tighter leading-[1.05]">
-                    Orchestrate <br />
-                    <span className="gradient-text">Extraordinary</span> Events
+                    Build  <br />
+                    <span className="gradient-text">Unforgettable </span> Events
                 </h1>
 
                 <p className="text-xl text-text-muted mb-12 max-w-2xl mx-auto leading-relaxed font-light">
