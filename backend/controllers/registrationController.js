@@ -136,6 +136,10 @@ const verifyAttendance = async (req, res) => {
             }
 
             registration = await Registration.findOne({ user: req.user.id, event: event._id }).populate('event user');
+        } else if (method === 'Ticket') {
+            const { ticketId } = req.body;
+            registration = await Registration.findOne({ ticketId }).populate('event user');
+            if (!registration) return res.status(404).json({ message: 'Ticket not found or invalid' });
         } else if (method === 'Location') {
             const { eventId, userLat, userLng } = req.body;
             event = await Event.findOne({ eventId });

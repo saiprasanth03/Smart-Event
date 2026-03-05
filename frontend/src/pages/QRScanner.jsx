@@ -98,12 +98,17 @@ const QRScanner = () => {
 
     const handleAttendance = async (data) => {
         try {
-            const res = await axios.post('https://smart-event-56qg.onrender.com/api/registrations/verify-attendance', {
-                ...data,
-                method: 'QR'
-            }, {
+            // Determine if we're scanning a dynamic location QR or a static participant ticket
+            const endpoint = data.type === 'attendance'
+                ? 'verify-attendance'
+                : 'verify-ticket'; // The endpoint name for ticket verification in backend is verify-attendance but we need to pass right method
+
+            const payloadData = data.type === 'ticket' ? { ticketId: data.ticketId, method: 'Ticket' } : { ...data, method: 'QR' };
+
+            const res = await axios.post(`https://smart-event-56qg.onrender.com/api/registrations/verify-attendance`, payloadData, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
+
             setResult({
                 message: res.data.message,
                 user: res.data.registration.userName,
