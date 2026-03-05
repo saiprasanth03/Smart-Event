@@ -78,8 +78,8 @@ process.on("uncaughtException", (err) => {
 // Allow requests from frontend (Vercel)
 app.use(
   cors({
-    origin: "*", // you can replace with your frontend domain later
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: ["http://localhost:5173", "https://smart-event-iota.vercel.app", "https://smart-event-56qg.onrender.com"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   })
 );
