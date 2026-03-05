@@ -113,7 +113,8 @@ const JoinEvent = () => {
             navigate('/dashboard');
         } catch (err) {
             console.error('Registration failure details:', err.response?.data);
-            setError(err.response?.data?.message || 'Registration failed - please try a different College ID or contact support');
+            const serverErrorMessage = err.response?.data?.error ? `Server details: ${err.response.data.error}` : null;
+            setError(serverErrorMessage || err.response?.data?.message || 'Registration failed - please try a different College ID or contact support');
         } finally {
             setLoading(false);
         }

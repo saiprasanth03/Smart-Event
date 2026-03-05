@@ -19,6 +19,8 @@ const registerForEvent = async (req, res) => {
 
         for (const reg of collegeRegs) {
             const registeredEvent = reg.event;
+            if (!registeredEvent) continue; // Protection against orphaned registrations where the event was deleted!
+
             // Check if it's the same day
             if (new Date(registeredEvent.date).toDateString() === new Date(event.date).toDateString()) {
                 // Check for time overlap
