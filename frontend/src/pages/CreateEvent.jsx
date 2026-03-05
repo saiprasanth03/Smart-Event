@@ -193,7 +193,7 @@ const CreateEvent = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await axios.post('http://localhost:5000/api/events', { ...formData, allowedRegion }, {
+            const res = await axios.post('https://smart-event-56qg.onrender.com/api/events', { ...formData, allowedRegion }, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             setCreatedEventId(res.data.eventId);

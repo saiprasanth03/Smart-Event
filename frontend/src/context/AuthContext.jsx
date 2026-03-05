@@ -2,7 +2,7 @@
 // import axios from 'axios';
 
 // // Configure axios defaults
-// axios.defaults.baseURL = 'http://localhost:5000';
+// axios.defaults.baseURL = 'https://smart-event-56qg.onrender.com';
 
 // const AuthContext = createContext();
 
@@ -22,7 +22,7 @@
 
 //     const fetchUser = async () => {
 //         try {
-//             const res = await axios.get('http://localhost:5000/api/auth/me');
+//             const res = await axios.get('https://smart-event-56qg.onrender.com/api/auth/me');
 //             setUser(res.data);
 //         } catch (err) {
 //             console.error('Session restoration failed:', err);
@@ -35,7 +35,7 @@
 //     };
 
 //     const login = async (email, password) => {
-//         const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+//         const res = await axios.post('https://smart-event-56qg.onrender.com/api/auth/login', { email, password });
 //         localStorage.setItem('token', res.data.token);
 //         axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
 //         setUser(res.data.user);
@@ -43,7 +43,7 @@
 //     };
 
 //     const register = async (userData) => {
-//         const res = await axios.post('http://localhost:5000/api/auth/register', userData);
+//         const res = await axios.post('https://smart-event-56qg.onrender.com/api/auth/register', userData);
 //         localStorage.setItem('token', res.data.token);
 //         axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
 //         setUser(res.data.user);

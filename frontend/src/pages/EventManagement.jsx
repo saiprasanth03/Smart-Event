@@ -18,7 +18,7 @@ const EventManagement = () => {
 
     const fetchEvents = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/events');
+            const res = await axios.get('https://smart-event-56qg.onrender.com/api/events');
             setEvents(res.data);
         } catch (err) {
             console.error(err);
@@ -30,7 +30,7 @@ const EventManagement = () => {
     const handleDelete = async (eventId) => {
         if (window.confirm('Are you sure you want to delete this event? This will also remove all registrations and cannot be undone.')) {
             try {
-                await axios.delete(`http://localhost:5000/api/events/${eventId}`, {
+                await axios.delete(`https://smart-event-56qg.onrender.com/api/events/${eventId}`, {
                     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
                 });
                 fetchEvents();
@@ -42,7 +42,7 @@ const EventManagement = () => {
 
     const toggleFeature = async (eventId, feature) => {
         try {
-            const res = await axios.patch(`http://localhost:5000/api/events/${eventId}/toggle-${feature}`, {}, {
+            const res = await axios.patch(`https://smart-event-56qg.onrender.com/api/events/${eventId}/toggle-${feature}`, {}, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             // Immediately update local state without needing a refresh or second network request
@@ -218,7 +218,7 @@ const AwardsModal = ({ event, onClose }) => {
     useEffect(() => {
         const fetchRegistrations = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/registrations/event-registrations/${event.eventId}`, {
+                const res = await axios.get(`https://smart-event-56qg.onrender.com/api/registrations/event-registrations/${event.eventId}`, {
                     headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
                 });
                 setRegistrations(res.data);
@@ -234,7 +234,7 @@ const AwardsModal = ({ event, onClose }) => {
     const handleAssignAward = async (regId, award) => {
         setProcessing(true);
         try {
-            await axios.post('http://localhost:5000/api/registrations/assign-award', {
+            await axios.post('https://smart-event-56qg.onrender.com/api/registrations/assign-award', {
                 registrationId: regId,
                 award: award
             }, {

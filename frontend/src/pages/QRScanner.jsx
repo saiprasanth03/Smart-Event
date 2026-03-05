@@ -98,7 +98,7 @@ const QRScanner = () => {
 
     const handleAttendance = async (data) => {
         try {
-            const res = await axios.post('http://localhost:5000/api/registrations/verify-attendance', {
+            const res = await axios.post('https://smart-event-56qg.onrender.com/api/registrations/verify-attendance', {
                 ...data,
                 method: 'QR'
             }, {
@@ -118,7 +118,7 @@ const QRScanner = () => {
 
     const handleFoodRedemption = async (data) => {
         try {
-            const res = await axios.post('http://localhost:5000/api/registrations/redeem-food', {
+            const res = await axios.post('https://smart-event-56qg.onrender.com/api/registrations/redeem-food', {
                 ticketId: data.ticketId
             }, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }

@@ -18,7 +18,7 @@ const FeedbackPage = () => {
 
         setLoading(true);
         try {
-            await axios.post('http://localhost:5000/api/registrations/feedback', {
+            await axios.post('https://smart-event-56qg.onrender.com/api/registrations/feedback', {
                 eventId,
                 rating,
                 comment

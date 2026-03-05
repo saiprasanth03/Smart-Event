@@ -13,7 +13,7 @@ const AdminQRDisplay = () => {
 
     const fetchQR = async () => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/registrations/dynamic-qr/${eventId}`, {
+            const res = await axios.get(`https://smart-event-56qg.onrender.com/api/registrations/dynamic-qr/${eventId}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             setQrImage(res.data.qrImage);

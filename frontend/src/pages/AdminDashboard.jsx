@@ -22,7 +22,8 @@ const AdminDashboard = () => {
     const fetchStats = async () => {
         setLoading(true);
         try {
-            let url = 'http://localhost:5000/api/analytics';
+            const baseUrl = import.meta.env.VITE_API_URL || 'https://smart-event-56qg.onrender.com';
+            let url = `${baseUrl}/api/analytics`;
             if (eventIdParam) {
                 url += `?eventId=${eventIdParam}`;
             } else if (filterType !== 'All') {
@@ -42,9 +43,10 @@ const AdminDashboard = () => {
 
     const handleExport = async () => {
         try {
+            const baseUrl = import.meta.env.VITE_API_URL || 'https://smart-event-56qg.onrender.com';
             const exportUrl = eventIdParam
-                ? `http://localhost:5000/api/analytics/export?eventId=${eventIdParam}`
-                : 'http://localhost:5000/api/analytics/export';
+                ? `${baseUrl}/api/analytics/export?eventId=${eventIdParam}`
+                : `${baseUrl}/api/analytics/export`;
 
             const res = await axios.get(exportUrl, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -66,6 +68,12 @@ const AdminDashboard = () => {
         <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
             <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
             <p className="text-text-muted animate-pulse">Synchronizing Analytics...</p>
+        </div>
+    );
+
+    if (!stats) return (
+        <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+            <p className="text-red-400 font-bold uppercase tracking-widest">Failed to load analytics data. Ensure backend is running.</p>
         </div>
     );
 

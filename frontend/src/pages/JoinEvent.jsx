@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Search, MapPin, Calendar, Clock, ArrowRight, AlertCircle, Sparkles, Users, Coffee } from 'lucide-react';
@@ -15,6 +15,14 @@ const JoinEvent = () => {
     const [foodPreference, setFoodPreference] = useState('Veg');
     const [selectedMenuItems, setSelectedMenuItems] = useState([]);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        if (id) {
+            setEventId(id.replace(/\s/g, '').toUpperCase());
+        }
+    }, []);
 
     // Update team members array when team size changes
     const updateTeamSize = (size) => {
@@ -58,7 +66,7 @@ const JoinEvent = () => {
         setLoading(true);
         setError('');
         try {
-            const res = await axios.get(`http://localhost:5000/api/events/${eventId}`);
+            const res = await axios.get(`https://smart-event-56qg.onrender.com/api/events/${eventId}`);
             setEvent(res.data);
             if (res.data.isTeamEvent) updateTeamSize(2);
         } catch (err) {
@@ -91,7 +99,7 @@ const JoinEvent = () => {
         setLoading(true);
         setError('');
         try {
-            await axios.post('http://localhost:5000/api/registrations/register', {
+            await axios.post('https://smart-event-56qg.onrender.com/api/registrations/register', {
                 eventId,
                 collegeId,
                 teamName: event.isTeamEvent ? teamName : undefined,
@@ -127,7 +135,7 @@ const JoinEvent = () => {
                             className="input-field pl-12"
                             placeholder="Enter Event ID (e.g. AB123)"
                             value={eventId}
-                            onChange={(e) => setEventId(e.target.value.toUpperCase())}
+                            onChange={(e) => setEventId(e.target.value.replace(/\s/g, '').toUpperCase())}
                         />
                     </div>
                     <button type="submit" className="btn-primary px-8">Search</button>

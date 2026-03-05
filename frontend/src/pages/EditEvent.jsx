@@ -171,7 +171,7 @@ const EditEvent = () => {
 
     const fetchEvent = async () => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/events/${eventId}`);
+            const res = await axios.get(`https://smart-event-56qg.onrender.com/api/events/${eventId}`);
             const data = res.data;
             // Format date for input
             if (data.date) data.date = new Date(data.date).toISOString().split('T')[0];
@@ -217,7 +217,7 @@ const EditEvent = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            await axios.put(`http://localhost:5000/api/events/${eventId}`, { ...formData, allowedRegion }, {
+            await axios.put(`https://smart-event-56qg.onrender.com/api/events/${eventId}`, { ...formData, allowedRegion }, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             setMessage({ type: 'success', text: 'Event updated successfully.' });

@@ -21,7 +21,7 @@ const UserDashboard = () => {
 
     const fetchEvents = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/events');
+            const res = await axios.get('https://smart-event-56qg.onrender.com/api/events');
             setEvents(res.data);
         } catch (err) {
             console.error(err);
@@ -32,7 +32,7 @@ const UserDashboard = () => {
 
     const fetchMyRegistrations = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/registrations/my-registrations', {
+            const res = await axios.get('https://smart-event-56qg.onrender.com/api/registrations/my-registrations', {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             setMyEvents(res.data);
@@ -43,7 +43,7 @@ const UserDashboard = () => {
 
     const register = async (eventId) => {
         try {
-            await axios.post('http://localhost:5000/api/registrations/register', { eventId }, {
+            await axios.post('https://smart-event-56qg.onrender.com/api/registrations/register', { eventId }, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             alert('Confirmed! Your digital ticket is ready in "My Tickets".');
@@ -76,23 +76,69 @@ const UserDashboard = () => {
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {myEvents.map((registration) => (
-                    <TicketItem
-                        key={registration._id}
-                        registration={registration}
-                        onRefresh={fetchMyRegistrations}
-                    />
-                ))}
-
-                {myEvents.length === 0 && (
-                    <div className="col-span-full py-24 text-center glass-panel rounded-[2.5rem] border-dashed border-2 border-text-main/10">
-                        <Calendar className="mx-auto text-text-muted mb-4 opacity-20" size={48} />
-                        <h4 className="text-xl font-bold text-text-muted">No active registrations</h4>
-                        <p className="text-text-muted text-sm font-light mt-2">Explore the landing page or enter an Event ID to get started.</p>
-                    </div>
-                )}
+            <div className="flex gap-4 mb-8 bg-text-main/5 p-1 rounded-2xl w-fit">
+                <button
+                    onClick={() => setActiveTab('explore')}
+                    className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${activeTab === 'explore' ? 'bg-primary text-white shadow-lg' : 'text-text-muted hover:text-text-main'}`}
+                >
+                    Explore Events
+                </button>
+                <button
+                    onClick={() => setActiveTab('tickets')}
+                    className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${activeTab === 'tickets' ? 'bg-primary text-white shadow-lg' : 'text-text-muted hover:text-text-main'}`}
+                >
+                    My Tickets
+                </button>
             </div>
+
+            {activeTab === 'explore' ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {events.map((evt) => (
+                        <div key={evt._id} className="glass-card p-8 rounded-[2rem] border border-white/5 hover:border-primary/20 transition-all group flex flex-col h-full">
+                            <div className="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest w-fit mb-4">
+                                {evt.type}
+                            </div>
+                            <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors line-clamp-2">{evt.name}</h3>
+                            <div className="space-y-4 mb-8 flex-1 text-sm text-text-muted font-light">
+                                <div className="flex items-center gap-3"><Calendar size={16} className="text-primary/60" /><span>{new Date(evt.date).toLocaleDateString()}</span></div>
+                                <div className="flex items-center gap-3"><MapPin size={16} className="text-primary/60" /><span>{evt.location}</span></div>
+                            </div>
+                            <div className="mt-auto">
+                                <button
+                                    onClick={() => navigate(`/join-event?id=${evt.eventId}`)}
+                                    className="btn-primary w-full py-3 text-sm font-bold flex items-center justify-center gap-2"
+                                >
+                                    Join Event <ArrowRight size={16} />
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                    {events.length === 0 && (
+                        <div className="col-span-full py-24 text-center glass-panel rounded-[2.5rem] border-dashed border-2 border-text-main/10">
+                            <Calendar className="mx-auto text-text-muted mb-4 opacity-20" size={48} />
+                            <h4 className="text-xl font-bold text-text-muted">No events available in the ecosystem</h4>
+                        </div>
+                    )}
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {myEvents.map((registration) => (
+                        <TicketItem
+                            key={registration._id}
+                            registration={registration}
+                            onRefresh={fetchMyRegistrations}
+                        />
+                    ))}
+
+                    {myEvents.length === 0 && (
+                        <div className="col-span-full py-24 text-center glass-panel rounded-[2.5rem] border-dashed border-2 border-text-main/10">
+                            <Calendar className="mx-auto text-text-muted mb-4 opacity-20" size={48} />
+                            <h4 className="text-xl font-bold text-text-muted">No active registrations</h4>
+                            <p className="text-text-muted text-sm font-light mt-2">Explore the events tab to get started.</p>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 };
@@ -138,7 +184,7 @@ const TicketItem = ({ registration, onRefresh }) => {
     const handleDownloadCertificate = async (endpoint, filename) => {
         try {
             setDownloadingCert(true);
-            const res = await fetch(`http://localhost:5000/api/registrations/${endpoint}`, {
+            const res = await fetch(`https://smart-event-56qg.onrender.com/api/registrations/${endpoint}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -170,7 +216,7 @@ const TicketItem = ({ registration, onRefresh }) => {
     const handleUpdateFood = async (preference, memberIndex = null) => {
         setUpdatingFood(true);
         try {
-            await axios.put('http://localhost:5000/api/registrations/update-food', {
+            await axios.put('https://smart-event-56qg.onrender.com/api/registrations/update-food', {
                 ticketId,
                 foodPreference: preference,
                 teamMemberIndex: memberIndex
@@ -240,7 +286,7 @@ const TicketItem = ({ registration, onRefresh }) => {
 
     const sendAttendanceRequest = async (data, lat, lng, scannerInstance) => {
         try {
-            await axios.post('http://localhost:5000/api/registrations/verify-attendance', {
+            await axios.post('https://smart-event-56qg.onrender.com/api/registrations/verify-attendance', {
                 eventId: data.eventId,
                 dynamicToken: data.dynamicToken,
                 method: 'QR',
@@ -267,7 +313,7 @@ const TicketItem = ({ registration, onRefresh }) => {
         setLoading(true);
         navigator.geolocation.getCurrentPosition(async (position) => {
             try {
-                await axios.post('http://localhost:5000/api/registrations/verify-attendance', {
+                await axios.post('https://smart-event-56qg.onrender.com/api/registrations/verify-attendance', {
                     eventId: event.eventId, // Use unique eventId string
                     method: 'Location',
                     userLat: position.coords.latitude,
