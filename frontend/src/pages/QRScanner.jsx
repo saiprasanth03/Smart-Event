@@ -98,12 +98,21 @@ const QRScanner = () => {
 
     const handleAttendance = async (data) => {
         try {
-            // Determine if we're scanning a dynamic location QR or a static participant ticket
-            const endpoint = data.type === 'attendance'
-                ? 'verify-attendance'
-                : 'verify-ticket'; // The endpoint name for ticket verification in backend is verify-attendance but we need to pass right method
+            // Get user location first
+            let userLat = null;
+            let userLng = null;
 
-            const payloadData = data.type === 'ticket' ? { ticketId: data.ticketId, method: 'Ticket' } : { ...data, method: 'QR' };
+            try {
+                const position = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000 });
+                });
+                userLat = position.coords.latitude;
+                userLng = position.coords.longitude;
+            } catch (geoErr) {
+                console.warn("Could not get GPS location:", geoErr);
+            }
+
+            const payloadData = data.type === 'ticket' ? { ticketId: data.ticketId, method: 'Ticket', userLat, userLng } : { ...data, method: 'QR', userLat, userLng };
 
             const res = await axios.post(`https://smart-event-56qg.onrender.com/api/registrations/verify-attendance`, payloadData, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
@@ -124,14 +133,15 @@ const QRScanner = () => {
     const handleFoodRedemption = async (data) => {
         try {
             const res = await axios.post('https://smart-event-56qg.onrender.com/api/registrations/redeem-food', {
-                ticketId: data.ticketId
+                ticketId: data.ticketId,
+                memberToken: data.memberToken
             }, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             setResult({
                 message: 'Food Token Redeemed!',
-                user: res.data.registration.user.name,
-                event: res.data.registration.event.name
+                user: res.data.registration.userName,
+                event: res.data.registration.eventName // Fixed error here
             });
             setError(null);
         } catch (err) {

@@ -137,9 +137,20 @@ const verifyAttendance = async (req, res) => {
 
             registration = await Registration.findOne({ user: req.user.id, event: event._id }).populate('event user');
         } else if (method === 'Ticket') {
-            const { ticketId } = req.body;
+            const { ticketId, userLat, userLng } = req.body;
             registration = await Registration.findOne({ ticketId }).populate('event user');
             if (!registration) return res.status(404).json({ message: 'Ticket not found or invalid' });
+            event = registration.event;
+
+            if (event.coordinates && typeof event.coordinates.lat === 'number' && typeof event.coordinates.lng === 'number' && event.coordinates.lat !== 0) {
+                if (typeof userLat !== 'number' || typeof userLng !== 'number') {
+                    return res.status(400).json({ message: 'Location verification required for this event.' });
+                }
+                const distance = getDistance(userLat, userLng, event.coordinates.lat, event.coordinates.lng);
+                if (distance > 1000) {
+                    return res.status(400).json({ message: `Security Alert: Participant must be at the event location. (Distance: ${Math.round(distance)}m)` });
+                }
+            }
         } else if (method === 'Location') {
             const { eventId, userLat, userLng } = req.body;
             event = await Event.findOne({ eventId });
